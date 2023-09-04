@@ -14,6 +14,7 @@ public interface PedidoAdapterPort {
     List<Pedido> buscarPedidos(Optional<PedidoSortingOptions> sortingProperty, Optional<Sort.Direction> direction);
 
     List<Pedido> buscarPedidosPorStatusPedido(List<StatusPedido> statusPedidoList, PedidoSortingOptions sortingProperty, Sort.Direction direction);
+    List<Pedido> buscarPedidosPorStatusPedido(List<StatusPedido> statusPedidoList, Sort sort);
 
     Optional<Pedido> buscarPedidoPorId(UUID id) throws RecursoNaoEncontratoException;
 

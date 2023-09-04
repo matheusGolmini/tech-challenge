@@ -42,7 +42,20 @@ public class PedidoGateway implements PedidoAdapterPort {
             pedidosEntity = pedidoRepository.findAll();
         }
 
-        List<Pedido> pedidos = new ArrayList<Pedido>();
+        List<Pedido> pedidos = new ArrayList<>();
+
+        for (PedidoEntity pedidoEntity : pedidosEntity) {
+            pedidos.add(pedidoMapper.toDomain(pedidoEntity));
+        }
+        return pedidos;
+    }
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    @Override
+    public List<Pedido> buscarPedidosPorStatusPedido(List<StatusPedido> statusPedidoList, Sort sort) {
+        List<PedidoEntity> pedidosEntity = pedidoRepository.findByStatusPedidoIn(statusPedidoList, sort);
+
+        List<Pedido> pedidos = new ArrayList<>();
 
         for (PedidoEntity pedidoEntity : pedidosEntity) {
             pedidos.add(pedidoMapper.toDomain(pedidoEntity));
@@ -55,14 +68,7 @@ public class PedidoGateway implements PedidoAdapterPort {
     public List<Pedido> buscarPedidosPorStatusPedido(List<StatusPedido> statusPedidoList, PedidoSortingOptions sortingProperty, Sort.Direction direction) {
         Sort sort = Sort.by(direction, sortingProperty.getString());
 
-        List<PedidoEntity> pedidosEntity = pedidoRepository.findByStatusPedidoIn(statusPedidoList, sort);
-
-        List<Pedido> pedidos = new ArrayList<Pedido>();
-
-        for (PedidoEntity pedidoEntity : pedidosEntity) {
-            pedidos.add(pedidoMapper.toDomain(pedidoEntity));
-        }
-        return pedidos;
+        return buscarPedidosPorStatusPedido(statusPedidoList, sort);
     }
 
     @org.springframework.transaction.annotation.Transactional(readOnly = true)

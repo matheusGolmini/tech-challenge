@@ -11,10 +11,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static java.text.MessageFormat.format;
 
@@ -34,10 +31,20 @@ public class PedidoUseCases implements PedidoUseCasesPort {
     @Override
     public List<Pedido> buscarFilaDePedidos() {
         List<StatusPedido> statusPedidoList = new ArrayList<>();
-        statusPedidoList.add(StatusPedido.RECEBIDO);
+        statusPedidoList.add(StatusPedido.PRONTO);
         statusPedidoList.add(StatusPedido.EM_PREPARACAO);
+        statusPedidoList.add(StatusPedido.RECEBIDO);
 
-        return this.pedidoAdapterPort.buscarPedidosPorStatusPedido(statusPedidoList, PedidoSortingOptions.DATA_RECEBIMENTO, Sort.Direction.ASC);
+        List<Sort.Order> orders = new ArrayList<>();
+        orders.add(new Sort.Order(Sort.Direction.DESC, PedidoSortingOptions.DATA_RECEBIMENTO.getString()));
+
+        var pedidos = this.pedidoAdapterPort.buscarPedidosPorStatusPedido(statusPedidoList, Sort.by(orders));
+        return ordenarPedidosPorStatus(pedidos);
+    }
+
+    private List<Pedido> ordenarPedidosPorStatus(List<Pedido> pedidos) {
+        Collections.sort(pedidos, Comparator.comparing(Pedido::getStatusPedido));
+        return pedidos;
     }
 
     @Override

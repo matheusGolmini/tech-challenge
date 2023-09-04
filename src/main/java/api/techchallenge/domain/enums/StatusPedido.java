@@ -1,5 +1,5 @@
 package api.techchallenge.domain.enums;
 
 public enum StatusPedido {
-    RECEBIDO, EM_PREPARACAO, PRONTO, FINALIZADO, NAO_RECEBIDO
+    PRONTO, EM_PREPARACAO, RECEBIDO, NAO_RECEBIDO, FINALIZADO
 }
